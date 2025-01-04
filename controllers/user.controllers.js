@@ -26,11 +26,37 @@ async function createNewUser(req, res) {
 }
 
 async function updateUserById(req, res) {
-    return res.json({ message: "Features not added yet!" })
+    const { first_name, last_name, email, gender, job_title } = req.body
+    if (!first_name || !last_name || !email || !gender || !job_title) {
+        return res.status(400).json({ message: "All Fields are Requied" })
+    }
+    try {
+        const user = await User.findByIdAndUpdate(req.params.id, {
+            firstName: first_name,
+            lastName: last_name,
+            email: email,
+            gender: gender,
+            jobTitle: job_title
+        })
+        if (user) {
+            return res.json({message: "user updated successfully"})
+        } 
+        return res.json({message: "user not exist"})
+    } catch (error) {
+        return res.json({message: "Invalid Id"})
+    }
 }
 
 async function deleteUserById(req, res) {
-    return res.json({ message: "Features not added yet!" })
+    try {
+        const user = await User.findByIdAndDelete(req.params.id)
+        if (user) {
+            return res.json({message: "user deleted successfully"})
+        } 
+        return res.json({message: "user not exist"})
+    } catch (error) {
+        return res.json({message: "Invalid Id"})
+    }
 }
 
 
